@@ -1,7 +1,7 @@
-Get started:
+Get started:<br>
 
-**make init**
-Will install needed python packages into a venv
+**make init**<br>
+Will install needed python packages into a venv<br>
 
-**make run**
-Will start uvcorn webserver on http://127.0.0.1:8000
+**make run**<br>
+Will start uvcorn webserver on http://127.0.0.1:8000<br>
