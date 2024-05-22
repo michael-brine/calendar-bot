@@ -15,6 +15,7 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_core.messages import HumanMessage, AIMessage, ToolMessage
 
 examples = [
+    # show messages
     HumanMessage(
         "show me the scheduled events", name="example_user"
     ),
@@ -34,6 +35,28 @@ examples = [
     ToolMessage('[["30 Minute Meeting", "2024-05-22T18:30:00.000000Z", "2024-05-22T19:00:00.000000Z"]]', tool_call_id="2"),
     AIMessage(
         "You have 1 30 minute meeting starting at 2024-05-22T18:30:00.000000Z and ending at 2024-05-22T19:00:00.000000Z",
+        name="example_assistant",
+    ),
+    # no events
+    HumanMessage(
+        "show me the scheduled events", name="example_user_0"
+    ),
+    AIMessage(
+        "",
+        name="example_assistant_0",
+        tool_calls=[
+            {"name": "get_user_uri", "args": {}, "id": "9"}
+        ],
+    ),
+    ToolMessage("https://api.calendly.com/users/66cf2fc5-a315-48d3-affd-ff2f453d5e82", tool_call_id="9"),
+    AIMessage(
+        "",
+        name="example_assistant",
+        tool_calls=[{"name": "list_events", "args": {"user_uri": "https://api.calendly.com/users/66cf2fc5-a315-48d3-affd-ff2f453d5e82"}, "id": "10"}],
+    ),
+    ToolMessage('[]', tool_call_id="10"),
+    AIMessage(
+        "You have no meetings today.",
         name="example_assistant",
     ),
     # delete event
