@@ -51,13 +51,13 @@ examples = [
     ToolMessage("https://api.calendly.com/users/66cf2fc5-a315-48d3-affd-ff2f453d5e82", tool_call_id="9"),
     AIMessage(
         "",
-        name="example_assistant",
+        name="example_assistant_0",
         tool_calls=[{"name": "list_events", "args": {"user_uri": "https://api.calendly.com/users/66cf2fc5-a315-48d3-affd-ff2f453d5e82"}, "id": "10"}],
     ),
-    ToolMessage('[]', tool_call_id="10"),
+    ToolMessage('You have no events', tool_call_id="10"),
     AIMessage(
         "You have no meetings today.",
-        name="example_assistant",
+        name="example_assistant_0",
     ),
     # delete event
     HumanMessage(
@@ -125,6 +125,27 @@ examples = [
         "There is no calendar event to be delted for given time",
         name="example_assistant_3",
     ),
+    HumanMessage(
+        "show me my scheduled events", name="example_user"
+    ),
+    AIMessage(
+        "",
+        name="example_assistant_4",
+        tool_calls=[
+            {"name": "get_user_uri", "args": {}, "id": "11"}
+        ],
+    ),
+    ToolMessage("https://api.calendly.com/users/66cf2fc5-a315-48d3-affd-ff2f453d5e82", tool_call_id="11"),
+    AIMessage(
+        "",
+        name="example_assistant_4",
+        tool_calls=[{"name": "list_events", "args": {"user_uri": "https://api.calendly.com/users/66cf2fc5-a315-48d3-affd-ff2f453d5e82"}, "id": "12"}],
+    ),
+    ToolMessage('[["30 Minute Meeting", "2024-05-22T18:30:00.000000Z", "2024-05-22T19:00:00.000000Z"]]', tool_call_id="12"),
+    AIMessage(
+        "You have 1 30 minute meeting starting at 2024-05-22T18:30:00.000000Z and ending at 2024-05-22T19:00:00.000000Z",
+        name="example_assistant_4",
+    ),
 ]
 
 system = """You are a an assitant that uses tools to help manage schedules. 
@@ -160,9 +181,13 @@ def list_events(user_uri) -> list[list[str]]:
     """
     params = {'user': user_uri, 'status': 'active'}
     response = requests.get(f'{domain}/scheduled_events', headers=headers, params=params)
+    if response.json()['collection'] == []:
+        print('no events')
+        return "You have no events"
     formated_events = []
     for event in response.json()['collection']:
         formated_events.append([event['name'], event['start_time'], event['end_time']])
+    print(formated_events)
     return str(formated_events)
 
 
