@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request, Header, Depends
-from ai.chatbot import *
+from chatbot import *
 app = FastAPI()
 
 @app.post('/chat')
