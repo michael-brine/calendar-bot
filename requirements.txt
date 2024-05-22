@@ -1,0 +1,7 @@
+requests
+langchain
+langchain-openai
+langchainhub
+langchain_community
+uvicorn
+fastapi
